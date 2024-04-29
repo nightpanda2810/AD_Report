@@ -1,6 +1,10 @@
 import pandas as pd
-from openpyxl import load_workbook
-from openpyxl.utils import get_column_letter
+from openpyxl import load_workbook  # noqa: F401
+from openpyxl.utils import get_column_letter  # noqa: F401
+import re
+import ast
+
+cn_pattern = r"CN=([^,]+)"
 
 
 def extract_ad_data(input_data, the_attributes):
@@ -38,6 +42,21 @@ def extract_ad_data(input_data, the_attributes):
                     value = str(entry[attr].values[0])[:10]
                     if value == "1601-01-01" or value == "9999-12-31":
                         value = "Never"
+                elif attr == "member":  # Attributes that contain multiple items must be defined here.
+                    attr_name = attr
+                    old_value = entry[attr].values
+                    new_data = []
+                    for item in old_value:
+                        new_value = re.search(cn_pattern, item)
+                        if new_value:
+                            new_data.append(new_value.group(1))
+                    if not new_data:
+                        value = ""
+                    else:
+                        value = new_data
+                elif attr == "msDS-parentdistname":
+                    attr_name = "Parent_Location"
+                    value = entry[attr].values[0]
                 else:
                     attr_name = attr
                     value = entry[attr].values[0]
@@ -90,6 +109,31 @@ def create_xlsx(input_data, filename):
     for item in input_data:
         input_data[item] = input_data[item].reset_index(drop=True)
         input_data[item].to_excel(excel_writer, sheet_name=item, index=False)
+
+    # Auto-size columns
+    for sheet_name in excel_writer.sheets:
+        worksheet = excel_writer.sheets[sheet_name]
+        # Auto-size columns
+        for col_num, col in enumerate(worksheet.iter_cols()):
+            max_col_width = 0
+            for cell in col:
+                max_col_width = max(max_col_width, len(str(cell.value)))
+            max_col_width = min(max_col_width + 5, 30)  # Cap at 30 characters (+2 padding)
+            worksheet.column_dimensions[get_column_letter(col_num + 1)].width = max_col_width
+        # Apply text wrapping
+        for row in worksheet.iter_rows(min_row=2):  # Start from the second row (header is row 1)
+            for cell in row:
+                new_alignment = cell.alignment.copy()  # Create a copy
+                new_alignment.wrap_text = True  # Modify wrap_text on the copy
+                cell.alignment = new_alignment
+
+                # Newline insertion (conditional)
+                # print(cell.value, type(cell.value))
+                if cell.value.startswith("[") and cell.value.endswith("]"):
+                    print("Cell Value:", cell.value, "Type:", type(cell.value))
+                    list_version = ast.literal_eval(cell.value)  # Convert to list
+                    cell.value = "\n".join(list_version)  # Convert back to string with newlines
+
     excel_writer._save()
 
 

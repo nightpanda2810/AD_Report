@@ -30,7 +30,7 @@ def extract_ad_data(input_data, the_attributes):
             try:
                 if attr == "userAccountControl":
                     row.update(extract_user_account_control(entry, FLAG_MAP))
-                elif attr in ["pwdLastSet", "modifyTimeStamp", "accountExpires", "createTimeStamp"]:
+                elif attr in ["pwdLastSet", "modifyTimeStamp", "accountExpires", "createTimeStamp", "lastLogon"]:
                     attr_name = attr if attr != "modifyTimeStamp" else "Date_Modified"
                     row[attr_name] = extract_timestamp(entry[attr].values[0])
                 elif attr == "member":

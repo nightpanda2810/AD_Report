@@ -3,6 +3,7 @@ __pycache__
 venv
 dist
 testing
+.VSCodeCounter
 
 # Files
 config.yaml

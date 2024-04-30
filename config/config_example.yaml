@@ -1,42 +1,56 @@
-# Replace HEROLAB_USERNAME, HEROLAB_PASSWORD, HEROLAB_DEVICENAME, and CHARACTER_ID under character_url.
-# Replace or add sound URLs to your preferences.
-# Filename can be whatever you want, however config.yaml is loaded by default.
 
 # Login information
-username: "HEROLAB_USERNAME"
-password: "HERLAB_PASSWORD"
-device: "HEROLAB_DEVICENAME"
-character_url: "https://herolab.online/characters/CHARACTER_ID/1/play/character"
+domain: "DOMAIN"
+server: "SERVER"
+username: "USERNAME"
+password: "PASSWORD"
+
+# Export type: CSV, XLSX, or BOTH
+export_type: BOTH
+
+# Base DN
+base_dn: 'DC=DOMAIN,DC=com'
 
 # File outputs
-roll_stats: C:\Users\night\OneDrive\D&D\Die_Roll_Stats
+# output_directory: E:\
 
-# Audio links
-good_sounds:
-  - "https://www.myinstants.com/media/sounds/final-fantasy-vii-victory-fanfare-1.mp3"
-  - "https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"
-  - "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"
-  - "https://www.myinstants.com/media/sounds/zelda-chest-opening-and-item-catch.mp3"
-  - "https://www.myinstants.com/media/sounds/kids-saying-yay-sound-effect_3.mp3"
-  - "https://www.myinstants.com/media/sounds/everything-is-awesome.mp3"
-  - "https://www.myinstants.com/media/sounds/wootwoot_ringtone.mp3"
-  - "https://www.myinstants.com/media/sounds/nicolas-cage-thats-all-you-had-to-do.mp3"
+# Debug
+DEBUG: false
 
-bad_sounds:
-  - "https://www.myinstants.com/media/sounds/dun-dun-dun-sound-effect-brass_8nFBccR.mp3"
-  - "https://www.myinstants.com/media/sounds/the-price-is-right-losing-horn.mp3"
-  - "https://www.myinstants.com/media/sounds/meme-de-creditos-finales.mp3"
-  - "https://www.myinstants.com/media/sounds/awkward-cricket-sound-effect.mp3"
-  - "https://www.myinstants.com/media/sounds/heknew.mp3"
-  - "https://www.myinstants.com/media/sounds/wilhelmscream.mp3"
-  - "https://www.myinstants.com/media/sounds/oh-no-nono.mp3"
-  - "https://www.myinstants.com/media/sounds/downer_noise.mp3"
-  - "https://www.myinstants.com/media/sounds/epic-fail_V7o3nYs.mp3"
-  - "https://www.myinstants.com/media/sounds/extremely-loud-incorrect-buzzer_0cDaG20.mp3"
-  - "https://www.myinstants.com/media/sounds/youaaaaargh.mp3"
-  - "https://www.myinstants.com/media/sounds/perfect-fart.mp3"
-  - "https://www.myinstants.com/media/sounds/wcgertcz074.mp3"
-  - "https://www.myinstants.com/media/sounds/nicolas-cage-fuuuuuuuu.mp3"
+# Regex to match the CN= part of example: 'CN=example_cn,OU=example_ou2,OU=example_ou1,DC=dc,DC=domain,DC=com'
+"cn_pattern": r"CN=([^,]+)"
 
-nice:
-  - "https://www.myinstants.com/media/sounds/careless_whispers.mp3"
+# Required attributes. These will be in order they are listed, see additional comments below for more details.
+user_attributes:
+  - "sAMAccountName"
+  - "userAccountControl"  # This attribute contains a bunch of information. Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
+  - "displayName"
+  - "msDS-parentdistname"
+  - "description"
+  - "pwdLastSet"
+  - "createTimeStamp"
+  - "modifyTimeStamp"
+  - "accountExpires"
+  - "lastLogon"
+  
+
+comp_attributes:
+  - "sAMAccountName"
+  - "userAccountControl"  # This attribute contains a bunch of information. Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
+  - "displayName"
+  - "msDS-parentdistname"
+  - "description"
+  - "pwdLastSet"
+  - "createTimeStamp"
+  - "modifyTimeStamp"
+  - "accountExpires"
+  - "lastLogon"
+  - "operatingSystem"
+
+group_attributes:
+  - "name"
+  - "msDS-parentdistname"
+  - "description"
+  - "member"
+  - "createTimeStamp"
+  - "modifyTimeStamp"

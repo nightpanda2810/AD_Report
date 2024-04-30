@@ -158,12 +158,18 @@ def create_xlsx(input_data, filename):
     excel_writer._save()
 
 
-def create_all_reports(extracted_data, config):
+def create_all_reports(extracted_data, config, output_dir=None):
     """Creates all reports, in CSV, XLSX, or both types. XLSX will contain all data, where CSV will have a seperate file per data point.
     Requires passing of configuration for the export type as a dictionary item "export_type" = "CSV" or "XLSX" or "BOTH"."""
     if config["export_type"] in ["CSV", "BOTH"]:
         for item in extracted_data:
-            create_csv(extracted_data[item], f"{item}_report.csv")
+            if output_dir:
+                create_csv(extracted_data[item], f"{output_dir}\\{item}_report.csv")
+            else:
+                create_csv(extracted_data[item], f"{item}_report.csv")
 
     if config["export_type"] in ["XLSX", "BOTH"]:
-        create_xlsx(extracted_data, "ad_report.xlsx")
+        if output_dir:
+            create_xlsx(extracted_data, f"{output_dir}\\ad_report.xlsx")
+        else:
+            create_xlsx(extracted_data, "ad_report.xlsx")

@@ -39,4 +39,4 @@ extracted_data["comp_data"] = search_and_extract_data(config["base_dn"], SEARCH_
 extracted_data["group_data"] = search_and_extract_data(config["base_dn"], SEARCH_FILTER_GROUPS, config["group_attributes"], connection)
 
 # Export data to files.
-create_all_reports(extracted_data, config)
+create_all_reports(extracted_data, config, output_dir=config["output_directory"])

@@ -23,10 +23,11 @@ DEBUG: false
 # Required attributes. These will be in order they are listed, see additional comments below for more details.
 user_attributes:
   - "sAMAccountName"
-  - "userAccountControl"  # This attribute contains a bunch of information. Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
+  - "userAccountControl"  # This attribute contains various details: Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. In this order.
   - "displayName"
   - "msDS-parentdistname"
   - "description"
+  - "memberOf"
   - "pwdLastSet"
   - "createTimeStamp"
   - "modifyTimeStamp"
@@ -36,7 +37,7 @@ user_attributes:
 
 comp_attributes:
   - "sAMAccountName"
-  - "userAccountControl"  # This attribute contains a bunch of information. Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
+  - "userAccountControl"  # This attribute contains various details: Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. In this order.
   - "displayName"
   - "msDS-parentdistname"
   - "description"
@@ -51,6 +52,7 @@ group_attributes:
   - "name"
   - "msDS-parentdistname"
   - "description"
+  - "groupType"
   - "member"
   - "createTimeStamp"
   - "modifyTimeStamp"

@@ -1,3 +1,7 @@
+# HOW TO USE
+# Make a copy of this file named config.yaml with your required edits.
+# If there are attributes you do not want, simply comment them out.
+# Be sure to read all the comments below.
 
 # Login information
 domain: "DOMAIN"
@@ -17,13 +21,13 @@ base_dn: 'DC=DOMAIN,DC=com'
 # Debug
 DEBUG: false
 
-# Regex to match the CN= part of example: 'CN=example_cn,OU=example_ou2,OU=example_ou1,DC=dc,DC=domain,DC=com'
-"cn_pattern": r"CN=([^,]+)"
-
 # Required attributes. These will be in order they are listed, see additional comments below for more details.
+# Any attributes NOT listed here MAY break the script, depending on the type of data the attribute is. Add attributes with caution. Any issues will require refactoring.
+
+# User specific.
 user_attributes:
   - "sAMAccountName"
-  - "userAccountControl"  # This attribute contains various details: Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. In this order.
+  - "userAccountControl"  # Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
   - "displayName"
   - "msDS-parentdistname"
   - "description"
@@ -34,10 +38,10 @@ user_attributes:
   - "accountExpires"
   - "lastLogon"
   
-
+#Computer specific.
 comp_attributes:
   - "sAMAccountName"
-  - "userAccountControl"  # This attribute contains various details: Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. In this order.
+  - "userAccountControl"  # Account_Disabled, Pwd_Not_Required, Pwd_Cant_Change, Pwd_Doesnt_Expire. Sorting will be like this for this item.
   - "displayName"
   - "msDS-parentdistname"
   - "description"
@@ -48,6 +52,7 @@ comp_attributes:
   - "lastLogon"
   - "operatingSystem"
 
+# Group specific.
 group_attributes:
   - "name"
   - "msDS-parentdistname"

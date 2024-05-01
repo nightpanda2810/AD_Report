@@ -2,6 +2,8 @@
 It uses the Pandalibs library for YAML configuration and printing dictionarys in a readable manner when necessary."""
 
 # Standard library imports
+import os
+
 # Public library imports
 # Personal library imports
 from pandalibs.pprint_nosort import pp
@@ -13,7 +15,10 @@ from modules.create_files import create_all_reports
 from modules.extract_data import search_and_extract_data
 
 # Initialized variables
-config = get_configuration_data(up_a_level=False)
+if not os.path.exists("config"):
+    config = get_configuration_data(up_a_level=False, subfolder="")
+else:
+    config = get_configuration_data(up_a_level=False)
 SEARCH_FILTER_USERS = "(&(objectCategory=person)(objectClass=user)(sAMAccountName=*))"
 SEARCH_FILTER_COMPS = "(&(objectCategory=computer)(objectClass=user)(sAMAccountName=*))"
 SEARCH_FILTER_GROUPS = "(&(objectCategory=group)(objectClass=group)(sAMAccountName=*))"

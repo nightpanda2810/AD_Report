@@ -9,7 +9,8 @@ from pandalibs.yaml_importer import get_configuration_data
 
 # Module imports
 from modules.connect_ad import connect_to_ad
-from modules.extract_data import search_and_extract_data, create_all_reports
+from modules.create_files import create_all_reports
+from modules.extract_data import search_and_extract_data
 
 # Initialized variables
 config = get_configuration_data(up_a_level=False)

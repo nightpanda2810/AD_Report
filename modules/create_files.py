@@ -19,7 +19,9 @@ def create_csv(input_data, filename):
 
 
 def create_xlsx(input_data, filename):
-    """Creates an Excel file."""
+    """Creates an Excel file.
+    Auto sizes columns and rows.
+    Word wraps."""
     excel_writer = pd.ExcelWriter(filename)
     for item in input_data:
         input_data[item] = input_data[item].reset_index(drop=True)
@@ -28,12 +30,12 @@ def create_xlsx(input_data, filename):
     # Auto-size columns
     for sheet_name in excel_writer.sheets:
         worksheet = excel_writer.sheets[sheet_name]
-        # Auto-size columns
+        worksheet.auto_filter.ref = worksheet.dimensions
         for col_num, col in enumerate(worksheet.iter_cols()):
             max_col_width = 0
             for cell in col:
                 max_col_width = max(max_col_width, len(str(cell.value)))
-            max_col_width = min(max_col_width + 5, 30)  # Cap at 30 characters (+2 padding)
+            max_col_width = min(max_col_width + 7, 30)  # Cap at 30 characters (+2 padding)
             worksheet.column_dimensions[get_column_letter(col_num + 1)].width = max_col_width
         # Apply text wrapping
         for row in worksheet.iter_rows(min_row=2):  # Start from the second row (header is row 1)

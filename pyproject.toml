@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ad-report"
+version = "0.1.0"
+description = "Active Directory catch-all report."
+authors = ["nightpanda2810 <nightpanda2810@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ldap3 = "^2.9.1"
+openpyxl = "^3.1.2"
+pandalibs = "^0.1.3"
+pandas = "^2.2.2"
+wmi = "^1.5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

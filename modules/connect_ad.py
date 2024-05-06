@@ -7,12 +7,10 @@ import ldap3 as ad
 
 
 # Module imports
-
 # Initialized variables
 
+
 # Connect to active directory
-
-
 def connect_to_ad(server, domain, username, password):
     try:
         """Connects to Active Directory. Requires server name, domain name, username, and password."""

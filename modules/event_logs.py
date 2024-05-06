@@ -9,7 +9,6 @@ import pandas as pd
 import wmi
 
 # Personal library imports
-
 # Module imports
 # Initialized variables
 

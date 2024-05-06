@@ -1,5 +1,5 @@
 # Active Directory Report
-Simple script to gather the folling data. Exports to CSV for each, or single Excel file.
+Simple script to gather the following data. Exports to CSV for each, or single Excel file.
 - User data
 - Computer data
 - Group data

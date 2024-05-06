@@ -14,7 +14,10 @@ import ldap3 as ad
 
 
 def connect_to_ad(server, domain, username, password):
-    """Connects to Active Directory. Requires server name, domain name, username, and password."""
-    server = ad.Server(f"{server}.{domain}", get_info=ad.ALL)
-    conn = ad.Connection(server, user=(f"{username}@{domain}"), password=password, auto_bind=True)
-    return conn
+    try:
+        """Connects to Active Directory. Requires server name, domain name, username, and password."""
+        server = ad.Server(f"{server}.{domain}", get_info=ad.ALL)
+        conn = ad.Connection(server, user=(f"{username}@{domain}"), password=password, auto_bind=True)
+        return conn
+    except Exception:
+        raise

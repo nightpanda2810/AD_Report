@@ -26,112 +26,145 @@ GROUP_FLAG_MAP = {
 
 def extract_ad_data(input_data, the_attributes):
     """Extracts all requested data from Active Directory."""
-    data = []
-    for entry in input_data:
-        row = {}
-        for attr in the_attributes:
-            try:
-                if attr == "userAccountControl":
-                    row.update(extract_user_account_control(entry, UAC_FLAG_MAP))
-                elif attr == "groupType":
-                    row["groupType"] = extract_group_type(entry[attr].values[0])
-                elif attr in ["pwdLastSet", "modifyTimeStamp", "accountExpires", "createTimeStamp", "lastLogon"]:
-                    attr_name = attr if attr != "modifyTimeStamp" else "Date_Modified"
-                    row[attr_name] = extract_timestamp(entry[attr].values[0])
-                elif attr in {"member", "memberOf"}:
-                    row[attr] = extract_member(entry[attr].values)
-                elif attr == "msDS-parentdistname":
-                    row["Parent_Location"] = entry[attr].values[0]
-                else:
-                    row[attr] = entry[attr].values[0]
-            except (AttributeError, IndexError):
-                row[attr] = ""
-        data.append(row)
-    return data
+    try:
+        data = []
+        for entry in input_data:
+            row = {}
+            for attr in the_attributes:
+                try:
+                    if attr == "userAccountControl":
+                        row.update(extract_user_account_control(entry, UAC_FLAG_MAP))
+                    elif attr == "groupType":
+                        row["groupType"] = extract_group_type(entry[attr].values[0])
+                    elif attr in ["pwdLastSet", "modifyTimeStamp", "accountExpires", "createTimeStamp", "lastLogon"]:
+                        attr_name = attr if attr != "modifyTimeStamp" else "Date_Modified"
+                        row[attr_name] = extract_timestamp(entry[attr].values[0])
+                    elif attr in {"member", "memberOf"}:
+                        row[attr] = extract_member(entry[attr].values)
+                    elif attr == "msDS-parentdistname":
+                        row["Parent_Location"] = entry[attr].values[0]
+                    else:
+                        row[attr] = entry[attr].values[0]
+                except (AttributeError, IndexError):
+                    row[attr] = ""
+            data.append(row)
+        return data
+    except Exception:
+        raise
 
 
 def extract_group_type(group_type_value):
     """Helper function for groupType attribute. Read the bitmask and returns correct values."""
-    group_types = []
-    if not group_type_value & GROUP_FLAG_MAP["Security"]:
-        group_types.append("Distribution")
-    for key, value in GROUP_FLAG_MAP.items():
-        if group_type_value & value:
-            group_types.append(key)
-    return "\n".join(group_types)
+    try:
+        group_types = []
+        if not group_type_value & GROUP_FLAG_MAP["Security"]:
+            group_types.append("Distribution")
+        for key, value in GROUP_FLAG_MAP.items():
+            if group_type_value & value:
+                group_types.append(key)
+        return "\n".join(group_types)
+    except Exception:
+        raise
 
 
 def extract_user_account_control(entry, flags):
     """Helper function for user_account_control attribute. Splits the user account control flags into seperate columns and returns a dictionary."""
-    col = {column_name: "N/A" for column_name in flags.keys()}
-    if is_user_enabled(entry):
-        col["Account_Disabled"] = "Yes"
-    else:
-        col["Account_Disabled"] = "No"
-    if is_password_not_required(entry):
-        col["Pwd_Not_Required"] = "Yes"
-    else:
-        col["Pwd_Not_Required"] = "No"
-    if is_password_cant_change(entry):
-        col["Pwd_Cant_Change"] = "Yes"
-    else:
-        col["Pwd_Cant_Change"] = "No"
-    if is_password_doesnt_expire(entry):
-        col["Pwd_Doesnt_Expire"] = "Yes"
-    else:
-        col["Pwd_Doesnt_Expire"] = "No"
-    return col
+    try:
+        col = {column_name: "N/A" for column_name in flags.keys()}
+        if is_user_enabled(entry):
+            col["Account_Disabled"] = "Yes"
+        else:
+            col["Account_Disabled"] = "No"
+        if is_password_not_required(entry):
+            col["Pwd_Not_Required"] = "Yes"
+        else:
+            col["Pwd_Not_Required"] = "No"
+        if is_password_cant_change(entry):
+            col["Pwd_Cant_Change"] = "Yes"
+        else:
+            col["Pwd_Cant_Change"] = "No"
+        if is_password_doesnt_expire(entry):
+            col["Pwd_Doesnt_Expire"] = "Yes"
+        else:
+            col["Pwd_Doesnt_Expire"] = "No"
+        return col
+    except Exception:
+        raise
 
 
 def extract_timestamp(value):
     """Helper function to convert datetime attributes into a date. Also converts 1601-01-01 and 999-12-31 into "Never" when they show up."""
-    if str(value)[:10] in ["1601-01-01", "9999-12-31"]:
-        return "Never"
-    return str(value)[:10]
+    try:
+        if str(value)[:10] in ["1601-01-01", "9999-12-31"]:
+            return "Never"
+        return str(value)[:10]
+    except Exception:
+        raise
 
 
 def extract_member(value):
     """Helper function to convert member attribute into a list, or blank string if appropiate."""
-    new_data = []
-    for item in value:
-        new_value = re.search(CN_PATTERN, item)
-        if new_value:
-            new_data.append(new_value.group(1))
-    return new_data if new_data else ""
+    try:
+        new_data = []
+        for item in value:
+            new_value = re.search(CN_PATTERN, item)
+            if new_value:
+                new_data.append(new_value.group(1))
+        return new_data if new_data else ""
+    except Exception:
+        raise
 
 
 def extract_and_format_ad_data(input_data, attributes):
     """Extracts desired attributes and creates a DataFrame."""
-    data = extract_ad_data(input_data, attributes)
-    return pd.DataFrame(data)
+    try:
+        data = extract_ad_data(input_data, attributes)
+        return pd.DataFrame(data)
+    except Exception:
+        raise
 
 
 def search_and_extract_data(base_dn, search_filter, attributes, the_connection):
     """Extracts required data."""
-    the_connection.search(base_dn, search_filter, attributes=attributes)
-    entries = the_connection.entries
-    return extract_and_format_ad_data(entries, attributes)
+    try:
+        the_connection.search(base_dn, search_filter, attributes=attributes)
+        entries = the_connection.entries
+        return extract_and_format_ad_data(entries, attributes)
+    except Exception:
+        raise
 
 
 def is_user_enabled(entry):
     """Checks if the account is enabled."""
-    uac = entry["userAccountControl"][0]
-    return uac & 0x2
+    try:
+        uac = entry["userAccountControl"][0]
+        return uac & 0x2
+    except Exception:
+        raise
 
 
 def is_password_not_required(entry):
     """Checks if the account requires a password."""
-    uac = entry["userAccountControl"][0]
-    return uac & 0x20
+    try:
+        uac = entry["userAccountControl"][0]
+        return uac & 0x20
+    except Exception:
+        raise
 
 
 def is_password_cant_change(entry):
     """Checks if the account cannot change its password."""
-    uac = entry["userAccountControl"][0]
-    return uac & 0x40
+    try:
+        uac = entry["userAccountControl"][0]
+        return uac & 0x40
+    except Exception:
+        raise
 
 
 def is_password_doesnt_expire(entry):
     """Checks if the account password does not expire."""
-    uac = entry["userAccountControl"][0]
-    return uac & 0x10000
+    try:
+        uac = entry["userAccountControl"][0]
+        return uac & 0x10000
+    except Exception:
+        raise

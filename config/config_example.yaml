@@ -15,14 +15,17 @@ export_type: BOTH
 # Base DN
 base_dn: 'DC=DOMAIN,DC=com'
 
-# File outputs
+# File outputs. Defaults to current directory unless you uncommend and add path below.
 # output_directory: E:\
 
 # Debug
 DEBUG: false
 
+# Event log query string
+lockouts_query: "SELECT * FROM Win32_NTLogEvent WHERE Logfile='Security' AND EventCode='4740'"
+
 # Required attributes. These will be in order they are listed, see additional comments below for more details.
-# Any attributes NOT listed here MAY break the script, depending on the type of data the attribute is. Add attributes with caution. Any issues will require refactoring.
+# Any attributes NOT listed here MAY break the script, depending on the type of data the attribute is. Add attributes with caution. Any issues will require refactoring of code.
 
 # User specific.
 user_attributes:
@@ -61,3 +64,7 @@ group_attributes:
   - "member"
   - "createTimeStamp"
   - "modifyTimeStamp"
+
+
+# Event log query string
+lockouts_query: "SELECT * FROM Win32_NTLogEvent WHERE Logfile='Security' AND EventCode='4740'"

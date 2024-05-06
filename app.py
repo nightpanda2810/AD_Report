@@ -12,6 +12,7 @@ from pandalibs.yaml_importer import get_configuration_data
 # Module imports
 from modules.connect_ad import connect_to_ad
 from modules.create_files import create_all_reports
+from modules.event_logs import user_lockout_events
 from modules.extract_data import search_and_extract_data
 
 # Initialized variables
@@ -22,6 +23,7 @@ else:
 SEARCH_FILTER_USERS = "(&(objectCategory=person)(objectClass=user)(sAMAccountName=*))"
 SEARCH_FILTER_COMPS = "(&(objectCategory=computer)(objectClass=user)(sAMAccountName=*))"
 SEARCH_FILTER_GROUPS = "(&(objectCategory=group)(objectClass=group)(sAMAccountName=*))"
+extracted_data = {}
 
 
 # Print out the current configuraion if debugging is set.
@@ -39,10 +41,31 @@ connection = connect_to_ad(
 )
 
 # Extract data
-extracted_data = {}
-extracted_data["user_data"] = search_and_extract_data(config["base_dn"], SEARCH_FILTER_USERS, config["user_attributes"], connection)
-extracted_data["comp_data"] = search_and_extract_data(config["base_dn"], SEARCH_FILTER_COMPS, config["comp_attributes"], connection)
-extracted_data["group_data"] = search_and_extract_data(config["base_dn"], SEARCH_FILTER_GROUPS, config["group_attributes"], connection)
+extracted_data["user_data"] = search_and_extract_data(
+    config["base_dn"],
+    SEARCH_FILTER_USERS,
+    config["user_attributes"],
+    connection,
+)
+extracted_data["comp_data"] = search_and_extract_data(
+    config["base_dn"],
+    SEARCH_FILTER_COMPS,
+    config["comp_attributes"],
+    connection,
+)
+extracted_data["group_data"] = search_and_extract_data(
+    config["base_dn"],
+    SEARCH_FILTER_GROUPS,
+    config["group_attributes"],
+    connection,
+)
+extracted_data["lockout_data"] = user_lockout_events(
+    domain=config["domain"],
+    server=config["server"],
+    username=config["username"],
+    password=config["password"],
+    query=config["lockouts_query"],
+)
 
 # Export data to files.
 create_all_reports(extracted_data, config)

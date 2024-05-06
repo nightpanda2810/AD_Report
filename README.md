@@ -17,7 +17,7 @@ Simple script to gather the folling data. Exports to CSV for each, or single Exc
 - Last logon may not be accurate.
     - This is a known limitation of the Active Directory when targeting lastLogon. This attribute does not replicate across domain controllers.
         - LastLogonTimestamp is replicated, however it can update even if an actual login was not performed, so I did not target this.
-        - At a later update I will attempt to query each domain controller in the domain and pick the latest one, however this attribute should still be considered "best effort".
+        - At a later update I will attempt to query each domain controller in the domain and pick the latest one, however this attribute should still be considered a "best effort" piece of data.
 - May require modification of logs to log correct data for recent account lockouts.
     - In my test domain, I have the following group policies configured.
         - Audit account logon events: Success, Failure
@@ -30,9 +30,11 @@ Simple script to gather the folling data. Exports to CSV for each, or single Exc
         - Audit Logon: Success, Failure
 
 ## Usage
-1. Install poetry. Or alternatively, review pyproject.toml [tool.poetry.dependencies] and install them with pip.
+1. Install poetry. 
+    - Or  review pyproject.toml [tool.poetry.dependencies] and install them with your preferred method.
     - pip install poetry
-2. Install base requirements.
+2. Install base requirements. 
+    - Or use your preferred virtual environment method.
     - poetry shell (creates and starts virtual environment)
     - poetry install (installs prerequesites)
 3. Create config.yaml. See example in config_example.yaml
